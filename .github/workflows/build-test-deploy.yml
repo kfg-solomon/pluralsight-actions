@@ -66,7 +66,7 @@ jobs:
       - run: npm run build
       # artifacts are files that are ready to be shared or deployed
       - name: upload artifacts
-        uses: actions/upload-pages-artifacts@v3
+        uses: actions/upload-pages-artifact@v3 # not plural
         with:
           path: './out'
       # this step is so that it can be refered to later
