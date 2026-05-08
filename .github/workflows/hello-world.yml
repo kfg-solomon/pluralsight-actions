@@ -1,0 +1,13 @@
+name: hello-world
+# push event
+on: push
+
+jobs:
+  hello-wolrd-job:
+    # github hosted or self hosted runners, ubuntu is github hosted
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: check out repository code
+        uses: actions/checkout@v4 #version of checkout action, will uses latest if not specified
+      - run: echo "$(cat hello_world.txt)"
