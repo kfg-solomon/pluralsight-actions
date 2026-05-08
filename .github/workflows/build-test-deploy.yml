@@ -30,3 +30,46 @@ jobs:
           node-version: '20.x'
       - run: npm install
       - run: npm test
+
+  deploy:
+    needs: test
+
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+
+    # target environment and the url of the deployment
+    environment:
+      name: production
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      # authenticating with github
+      - name: checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      # node environment for deployment
+      - name: use node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      # prep for page deployment
+      - name: configure github pages
+        uses: actions/configure-pages@v4
+        with:
+          static_site_generator: next
+      - run: npm install
+      - run: npm run build
+      # artifacts are files that are ready to be shared or deployed
+      - name: upload artifacts
+        uses: actions/upload-pages-artifacts@v3
+        with:
+          path: './out'
+      # this step is so that it can be refered to later
+      - name: deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
